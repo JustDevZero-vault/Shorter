@@ -45,6 +45,6 @@ def shorten_url(long_url, api_key, my_user):
 
 if __name__ == '__main__':
     urll=str(raw_input("Insert the url that you want to shorten: "))
-    key=str("R_ab05d0f13379b96cf22ec224e7f410ca")
-    user=str("gpnet")
+    key=str("YOUR API KEY")
+    user=str("YOUR USER KEY")
     shorten_url(urll, key, user)
