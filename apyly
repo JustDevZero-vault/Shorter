@@ -22,15 +22,24 @@
 #    -------------------- TODO LIST -------------------- *
 #    Adapt it for using graphical interface, plus of terminal.
 
+def tpars(responde):
+    abre=responde.split('var SHORTEN_RESULT = {') [1]
+    cierre=abre.split('};') [0]
+    sinIntros=cierre.split('\n') [8]
+    sinPuntos=sinIntros.split(': ')[1]
+    sinComillas=sinPuntos.split('"')[1]
+    return sinComillas
+
 import urllib
-def shorten_url(long_url):
+def shorten_url(url):
     try:
-        longUrl = (long_url)
+        longUrl = (url)
         encodeurl='http://bit.ly/%s' % (longUrl)
         request = urllib.urlopen(encodeurl)
         responde = request.read ()
         request.close()
-        print (responde)
+        #print (responde)
+        print tpars(responde)
     except IOError, e:
         raise "urllib error"
 
