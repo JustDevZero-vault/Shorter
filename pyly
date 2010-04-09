@@ -1,0 +1,50 @@
+#!/usr/bin/python
+#       pyly.py written in python2.6
+#       version 1.1
+#       Copyright 2009 Mephiston <meph.snake@gmail.com>
+#
+#       This program is free software; you can redistribute it and/or modify
+#       it under the terms of the GNU General Public License as published by
+#       the Free Software Foundation; either version 2.1.1 of the License, or
+#       (at your option) any later version.
+#
+#       This program is distributed in the hope that it will be useful,
+#       but WITHOUT ANY WARRANTY; without even the implied warranty of
+#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#       GNU General Public License for more details.
+#
+#       You should have received a copy of the GNU General Public License
+#       along with this program; if not, get a copy on http://www.gnu.org/licenses/gpl.txt
+
+# ---------------- Generic utilities ---------------- #
+# The main purpose of this script is to easily give urls in bit.ly format.
+# It shorts the url with your user and apikey for having stadistics and all the benefits of registered.
+#    -------------------- TODO LIST -------------------- *
+#    Adapt it for using graphical interface, plus of terminal.
+
+import urllib
+def shorten_url(long_url, api_key, my_user):
+    try:
+        #longUrl = (urll)
+        longUrl=urllib.urlencode(dict(longUrl=long_url))
+        #print long_url
+        apiKey=urllib.urlencode(dict(apiKey=api_key))
+        login=urllib.urlencode(dict(login=my_user))
+        encodeurl="http://api.bit.ly/shorten?version=2.0.1&%s&%s&%s" % (longUrl, apiKey, login)
+        #print encodeurl
+        request=urllib.urlopen(encodeurl)
+        responde=request.read ()
+        request.close()
+        respondedict=eval(responde)
+        #print responde
+        #print responde #debug
+        short_url=respondedict["results"][long_url]["shortUrl"]
+        print short_url
+    except IOError, e:
+        raise "urllib error"
+
+if __name__ == '__main__':
+    urll=str(raw_input("Insert the url that you want to shorten: "))
+    key=str("R_ab05d0f13379b96cf22ec224e7f410ca")
+    user=str("gpnet")
+    shorten_url(urll, key, user)
