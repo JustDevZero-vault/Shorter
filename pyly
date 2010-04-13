@@ -40,7 +40,7 @@ def shorten_url(long_url, api_key, my_user):
         #print long_url
         apiKey=urlencode(dict(apiKey=api_key))
         login=urlencode(dict(login=my_user))
-        encodeurl="http://api.bit.ly/shorten?version=2.0.1&%s&%s&%s" % (longUrl, apiKey, login)
+        encodeurl='http://api.bit.ly/shorten?version=2.0.1&%s&%s&%s' % (longUrl, apiKey, login)
         #print encodeurl
         request=urlopen(encodeurl)
         responde=request.read ()
@@ -73,8 +73,8 @@ def sysRun(key,user):
 
 try:
     if __name__ == '__main__':
-        key=str("ENTER YOUR API KEY HERE.")
-        user=str("ENTER YOUR USER HERE.")
+        key=str('ENTER YOUR API KEY HERE.')
+        user=str('ENTER YOUR USER HERE.')
         sysRun(key,user)
 except KeyboardInterrupt:
     print '\nThe progam was interrupted.'
