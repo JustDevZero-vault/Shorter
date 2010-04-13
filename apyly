@@ -1,6 +1,9 @@
 #!/usr/bin/env python
+from urllib import urlopen
+from exceptions import IndexError, IOError
+from sys import argv
 #       pyly.py written in python2.6
-#       version 1.1
+#       version 1.3
 #       Copyright 2009 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
@@ -16,34 +19,62 @@
 #       You should have received a copy of the GNU General Public License
 #       along with this program; if not, get a copy on http://www.gnu.org/licenses/gpl.txt
 
-# ---------------- Generic utilities ---------------- #
-# The main purpose of this script is to easily give urls in bit.ly format.
+#---------------------------- TODO LIST ------------------------------------ #
+# The main purpose of this script is to easily give urls with bit.ly service.
 # It shorts the url anonymously.
-#    -------------------- TODO LIST -------------------- *
+#---------------------------- MayBeToDo LIST ------------------------------------ #
 #    Adapt it for using graphical interface, plus of terminal.
+#--------------------------- CHANGE LOG ------------------------------------ #
+#       1.0     Initial release
+#       1.1     Improved the speed (only a little), deleted some splitting process
+#       1.2     Added a system argument method, you can choose between the sys.argv or ask method.
+#               By changing the line 75 for sysRun() or askRun()
+#       1.3     Fixed bugs, errors are treated as exceptions.
+#--------------------------- TESTED IN ------------------------------------- #
+#       GNU/Linux (all distros)
 
-def tpars(responde):
-    abre=responde.split('var SHORTEN_RESULT = {') [1]
-    cierre=abre.split('};') [0]
-    sinIntros=cierre.split('\n') [8]
-    sinPuntos=sinIntros.split(': ')[1]
-    sinComillas=sinPuntos.split('"')[1]
-    return sinComillas
+def splitter(responde):
+    try:
+        opened=responde.split('var SHORTEN_RESULT = {') [1]
+        closed=opened.split('};') [0]
+        cleaned=closed.split('"')
+        #Here we make a splitting process, for cleaning data, and giving the url.
+        return cleaned[17]
+    except IndexError:
+        return 'The URL was not recognized.'
+        #If the url is not recognized, it causes an exception.
 
-import urllib
+
 def shorten_url(url):
     try:
         longUrl = (url)
         encodeurl='http://bit.ly/%s' % (longUrl)
-        request = urllib.urlopen(encodeurl)
+        request = urlopen(encodeurl)
         responde = request.read ()
         request.close()
-        #print (responde)
-        print tpars(responde)
+        print splitter(responde)
+        #Resquesting the for the url, and doing the split.
     except IOError, e:
-        raise "urllib error"
+        raise 'Ops! An I/O error happened.'
+        #Obviously, is obvious.
 
-if __name__ == '__main__':
-    url =str(raw_input("Insert the url that you want to shorten: "))
-    shorten_url(url)
+def sysRun():
+    #If you chose sysRun, it will use the url provided in your command line.
+    try:
+        shorten_url(argv[1])
+    except IndexError:
+        print 'The URL was not provided.'
 
+def askRun():
+    url=str(raw_input('Insert the url that you want to shorten: '))
+    if url!='':
+        shorten_url(url)
+    else:
+        print 'The URL was not provided.'
+
+
+try:
+    if __name__ == '__main__':
+        sysRun()
+except KeyboardInterrupt:
+    print '\nThe progam was interrupted.'
