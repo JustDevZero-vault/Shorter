@@ -1,6 +1,9 @@
 #!/usr/bin/python
+from urllib import urlopen,urlencode
+from exceptions import IndexError, IOError, KeyError
+from sys import argv
 #       pyly.py written in python2.6
-#       version 1.1
+#       version 1.3
 #       Copyright 2009 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
@@ -23,36 +26,55 @@
 #    Adapt it for using graphical interface, plus of terminal.
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
-#       1.1     Improved the speed (only a little), deleted some splitting process
+#       1.1     Fixed bugs, can use url with "&" atributes
 #       1.2     Added a system argument function, you can choose between the sys.argv or ask function.
-#               By changing the line 75 for sysRun() or askRun()
+#               By changing the line 75 for sysRun(key,user) or askRun(key,user)
 #       1.3     Fixed bugs, errors are treated as exceptions.
 #--------------------------- TESTED IN ------------------------------------------ #
 #       GNU/Linux (all distros)
 
-import urllib
 def shorten_url(long_url, api_key, my_user):
     try:
         #longUrl = (urll)
-        longUrl=urllib.urlencode(dict(longUrl=long_url))
+        longUrl=urlencode(dict(longUrl=long_url))
         #print long_url
-        apiKey=urllib.urlencode(dict(apiKey=api_key))
-        login=urllib.urlencode(dict(login=my_user))
+        apiKey=urlencode(dict(apiKey=api_key))
+        login=urlencode(dict(login=my_user))
         encodeurl="http://api.bit.ly/shorten?version=2.0.1&%s&%s&%s" % (longUrl, apiKey, login)
         #print encodeurl
-        request=urllib.urlopen(encodeurl)
+        request=urlopen(encodeurl)
         responde=request.read ()
         request.close()
         respondedict=eval(responde)
         #print responde
         #print responde #debug
-        short_url=respondedict["results"][long_url]["shortUrl"]
-        print short_url
+        try:
+            short_url=respondedict["results"][long_url]["shortUrl"]
+            print short_url
+        except KeyError:
+            print 'The URL was not recognized.'
     except IOError, e:
-        raise "urllib error"
+        raise 'Ops! An I/O error happened.'
 
-if __name__ == '__main__':
-    urll=str(raw_input("Insert the url that you want to shorten: "))
-    key=str("YOUR API KEY")
-    user=str("YOUR USER KEY")
-    shorten_url(urll, key, user)
+def askRun(key,user):
+    urll=str(raw_input('Insert the url that you want to shorten: '))
+    if urll!='':
+        shorten_url(urll, key, user)
+    else:
+        print 'The URL was not provided.'
+
+def sysRun(key,user):
+    #If you chose sysRun, it will use the url provided in your command line.
+    try:
+        shorten_url(argv[1], key, user)
+    except IndexError:
+        print 'The URL was not provided.'
+
+
+try:
+    if __name__ == '__main__':
+        key=str("ENTER YOUR API KEY HERE.")
+        user=str("ENTER YOUR USER HERE.")
+        sysRun(key,user)
+except KeyboardInterrupt:
+    print '\nThe progam was interrupted.'
