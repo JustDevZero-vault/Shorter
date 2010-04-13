@@ -35,24 +35,21 @@ from sys import argv
 
 def shorten_url(long_url, api_key, my_user):
     try:
-        #longUrl = (urll)
         longUrl=urlencode(dict(longUrl=long_url))
-        #print long_url
         apiKey=urlencode(dict(apiKey=api_key))
         login=urlencode(dict(login=my_user))
         encodeurl='http://api.bit.ly/shorten?version=2.0.1&%s&%s&%s' % (longUrl, apiKey, login)
-        #print encodeurl
         request=urlopen(encodeurl)
         responde=request.read ()
         request.close()
         respondedict=eval(responde)
-        #print responde
-        #print responde #debug
+        #Here we make the requesting process.
         try:
             short_url=respondedict["results"][long_url]["shortUrl"]
             print short_url
         except KeyError:
             print 'The URL was not recognized.'
+            #If the url is not recognized on the request, we treat it as an error.
     except IOError, e:
         raise 'Ops! An I/O error happened.'
 
