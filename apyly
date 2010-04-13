@@ -19,18 +19,18 @@ from sys import argv
 #       You should have received a copy of the GNU General Public License
 #       along with this program; if not, get a copy on http://www.gnu.org/licenses/gpl.txt
 
-#---------------------------- TODO LIST ------------------------------------ #
+#------------------------------ Utilities --------------------------------------- #
 # The main purpose of this script is to easily give urls with bit.ly service.
 # It shorts the url anonymously.
 #---------------------------- MayBeToDo LIST ------------------------------------ #
 #    Adapt it for using graphical interface, plus of terminal.
-#--------------------------- CHANGE LOG ------------------------------------ #
+#--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
 #       1.1     Improved the speed (only a little), deleted some splitting process
-#       1.2     Added a system argument method, you can choose between the sys.argv or ask method.
+#       1.2     Added a system argument function, you can choose between the sys.argv or ask function.
 #               By changing the line 75 for sysRun() or askRun()
 #       1.3     Fixed bugs, errors are treated as exceptions.
-#--------------------------- TESTED IN ------------------------------------- #
+#--------------------------- TESTED IN ------------------------------------------ #
 #       GNU/Linux (all distros)
 
 def splitter(responde):
