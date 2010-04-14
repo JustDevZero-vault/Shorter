@@ -30,7 +30,7 @@ from sys import argv
 #       1.2     Added a system argument function, you can choose between the sys.argv or ask function.
 #               By changing the line 75 for sysRun() or askRun()
 #       1.3     Fixed bugs, errors are treated as exceptions.
-#       1.4     Some prints become "returns", because it allows to use it in an import
+#       1.4     Some prints become "returns", because it allows to use it externally
 #--------------------------- TESTED IN ------------------------------------------ #
 #       GNU/LINUX, *BSD, MACOSX, WINDOWS
 
