@@ -23,8 +23,8 @@
 #------------------------------ Utilities --------------------------------------- #
 # The main purpose of this script is to easily give urls with bit.ly service.
 # It shorts the url anonymously.
-#---------------------------- MayBeToDo LIST ------------------------------------ #
-#    Adapt it for using graphical interface, plus of terminal.
+#---------------------------- ToDo LIST ------------------------------------ #
+#       Include more Shorter url services.
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
 
