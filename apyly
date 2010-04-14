@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from urllib import urlopen
 from exceptions import IndexError, IOError
 from sys import argv
 #       pyly.py written in python2.8
 #       version 1.4
-#       Copyright 2009 Mephiston <meph.snake@gmail.com>
+#       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -22,8 +24,6 @@ from sys import argv
 #------------------------------ Utilities --------------------------------------- #
 # The main purpose of this script is to easily give urls with bit.ly service.
 # It shorts the url anonymously.
-#---------------------------- MayBeToDo LIST ------------------------------------ #
-#    Adapt it for using graphical interface, plus of terminal.
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
 #       1.1     Improved the speed (only a little), deleted some splitting process
