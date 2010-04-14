@@ -2,8 +2,8 @@
 from urllib import urlopen
 from exceptions import IndexError, IOError
 from sys import argv
-#       pyly.py written in python2.6
-#       version 1.3
+#       pyly.py written in python2.8
+#       version 1.4
 #       Copyright 2009 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
@@ -30,8 +30,9 @@ from sys import argv
 #       1.2     Added a system argument function, you can choose between the sys.argv or ask function.
 #               By changing the line 75 for sysRun() or askRun()
 #       1.3     Fixed bugs, errors are treated as exceptions.
+#       1.4     Some prints become "returns", because it allows to use it in an import
 #--------------------------- TESTED IN ------------------------------------------ #
-#       GNU/Linux (all distros)
+#       GNU/LINUX, *BSD, MACOSX, WINDOWS
 
 def splitter(responde):
     try:
@@ -52,7 +53,7 @@ def shorten_url(url):
         request = urlopen(encodeurl)
         responde = request.read ()
         request.close()
-        print splitter(responde)
+        return splitter(responde)
         #Resquesting the for the url, and doing the split.
     except IOError, e:
         raise 'Ops! An I/O error happened.'
@@ -61,20 +62,20 @@ def shorten_url(url):
 def sysRun():
     #If you chose sysRun, it will use the url provided in your command line.
     try:
-        shorten_url(argv[1])
+        return shorten_url(argv[1])
     except IndexError:
-        print 'The URL was not provided.'
+        return 'The URL was not provided.'
 
 def askRun():
     url=str(raw_input('Insert the url that you want to shorten: '))
     if url!='':
-        shorten_url(url)
+        return shorten_url(url)
     else:
-        print 'The URL was not provided.'
+        return 'The URL was not provided.'
 
 
 try:
     if __name__ == '__main__':
-        sysRun()
+        print sysRun()
 except KeyboardInterrupt:
     print '\nThe progam was interrupted.'
