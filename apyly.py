@@ -32,7 +32,7 @@ from sys import argv
 #       1.3     Fixed bugs, errors are treated as exceptions.
 #       1.4     Some prints become "returns", because it allows to use it externally
 #--------------------------- TESTED IN ------------------------------------------ #
-#       GNU/LINUX, *BSD, MACOSX, WINDOWS
+#       GNU/Linux (all distros)     WINDOWS NT*         MacOSX      *BSD
 
 def splitter(responde):
     try:

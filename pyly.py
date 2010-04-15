@@ -24,8 +24,6 @@ from sys import argv
 #------------------------------ Utilities --------------------------------------- #
 # The main purpose of this script is to easily give urls with bit.ly service.
 # It shorts the url with your user and apikey for having stadistics and all the benefits of registered.
-#---------------------------- MayBeToDo LIST ------------------------------------ #
-#    Adapt it for using graphical interface, plus of terminal.
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
 #       1.1     Fixed bugs, can use url with "&" atributes
@@ -33,8 +31,14 @@ from sys import argv
 #               By changing the line 75 for sysRun(key,user) or askRun(key,user)
 #       1.3     Fixed bugs, errors are treated as exceptions.
 #       1.4     Some prints become "returns", because it allows to use it externally
+#       1.5     The key and user are out of the main, for using with the GUI TOOL. geekshort.py
 #--------------------------- TESTED IN ------------------------------------------ #
-#       GNU/Linux (all distros)
+#       GNU/Linux (all distros)     WINDOWS NT*         MacOSX      *BSD
+
+
+#GLOBAL STUFF
+key=str('ENTER_YOUR_API_KEY_HERE')
+user=str('ENTER_YOUR_USER_HERE')
 
 def shorten_url(long_url, api_key, my_user):
     try:
@@ -71,11 +75,9 @@ def sysRun(key,user):
         print 'The URL was not provided.'
 
 
+
 try:
     if __name__ == '__main__':
-        key=str('ENTER_YOUR_API_KEY_HERE')
-        user=str('ENTER_YOUR_USER_HERE')
-
         if (key=='ENTER_YOUR_API_KEY_HERE'):
             print 'You forgot to specify your API KEY.'
         if (user=='ENTER_YOUR_USER_HERE'):

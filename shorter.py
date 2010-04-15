@@ -27,24 +27,30 @@
 #       Include more Shorter url services.
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
+#       1.1     Improved the look in all systems, under Windows was VERY VERY UGLY.
+#--------------------------- TESTED IN ------------------------------------------ #
+#       GNU/Linux (all distros)     WINDOWS NT*         MacOSX      *BSD
 
-from wx import Frame,ICONIZE,CAPTION,MINIMIZE,MINIMIZE_BOX,MAXIMIZE_BOX,CLOSE_BOX,SYSTEM_MENU,RESIZE_BORDER,CLIP_CHILDREN,TextCtrl,ComboBox,Button,EVT_BUTTON,ImageFromStream,BitmapFromImage,EmptyIcon,TheClipboard, InitAllImageHandlers,App,CB_DROPDOWN,CB_SORT,CB_READONLY,BU_TOP,ID_COPY,BoxSizer,LEFT,RIGHT,ALL,EXPAND,SHAPED,VERTICAL,HORIZONTAL,MessageBox,TextDataObject
+from wx import App,Frame,DEFAULT_FRAME_STYLE,ComboBox,CB_DROPDOWN,CB_READONLY,CB_SORT,TextCtrl,Button,ID_APPLY,BU_TOP,ID_COPY,Colour,VERTICAL,BoxSizer,GridSizer,ALL,EXPAND,RIGHT,LEFT,ALIGN_CENTER_HORIZONTAL,InitAllImageHandlers,EVT_BUTTON,ImageFromStream,BitmapFromImage,EmptyIcon,TheClipboard,MessageBox,TextDataObject
+#import wx
+# begin wxGlade: extracode
+# end wxGlade
 
 from base64 import b64decode
 from cStringIO import StringIO
 from urllib import urlopen
 
 AnonymousBitlyFlag = True
+BitlyFlag = True
 
 try:
     from apyly import shorten_url as shorten_apyly,splitter
 except ImportError:
     AnonymousBitlyFlag = False
-
-# begin wxGlade: extracode
-# end wxGlade
-
-
+try:
+    from pyly import shorten_url as shorten_pyly, key as pyly_key, user as pyly_user
+except ImportError:
+    BitlyFlag = False
 #GLOBAL STUFF
 
 def getImageStream():
@@ -115,27 +121,26 @@ def getImageStream():
     # convert png bytes to data stream
     return favicon_png_bytes
 
-
-
-
-class BitLyFrame(Frame):
+class ShorterFrame(Frame):
     def __init__(self, *args, **kwds):
         choices = []
         if AnonymousBitlyFlag:
             choices.append("bit.ly (anonymous)")
+        if BitlyFlag:
+            choices.append("bit.ly (registered)")
         choices.sort()
-
-        # begin wxGlade: BitLyFrame.__init__
-        kwds["style"] = ICONIZE|CAPTION|MINIMIZE|CLOSE_BOX|MINIMIZE_BOX|MAXIMIZE_BOX|SYSTEM_MENU|RESIZE_BORDER|CLIP_CHILDREN
+        # begin wxGlade: ShorterFrame.__init__
+        kwds["style"] = DEFAULT_FRAME_STYLE
         Frame.__init__(self, *args, **kwds)
-        self.SelectBox = ComboBox(self, 0, choices=choices, style=CB_DROPDOWN|CB_SORT|CB_READONLY)
-        self.OriginalTextBox = TextCtrl(self, 2, value="Enter your bad long url here.")
-        self.ShortUrlBox = TextCtrl(self, 1, value="")
+        self.SelectBox = ComboBox(self, 0, choices=choices, style=CB_DROPDOWN|CB_READONLY|CB_SORT)
+        self.TextOriginalUrl = TextCtrl(self, 1, value="Enter your bad long url here.")
+        self.TextShortUrl = TextCtrl(self, 2,  value="")
 
-        self.ShortenButton = Button(self, 4, _("Short It!"), style=BU_TOP)
-        EVT_BUTTON(self.ShortenButton, 4, self.OnShortenButton)
 
-        self.CopyButton = Button(self, ID_COPY, "", style=BU_TOP)
+        self.ShortenButton = Button(self, ID_APPLY, "", style=BU_TOP)
+        EVT_BUTTON(self.ShortenButton, ID_APPLY, self.OnShortenButton)
+
+        self.CopyButton = Button(self, ID_COPY, "")
         self.CopyButton.Bind(EVT_BUTTON, self.OnCopyButton)
 
         myStream = StringIO(getImageStream())
@@ -150,35 +155,63 @@ class BitLyFrame(Frame):
         # end wxGlade
 
     def __set_properties(self):
-        # begin wxGlade: BitLyFrame.__set_properties
-        self.SetTitle(_("GeeklyShorter"))
-        self.SetSize((575, 147))
-        self.SelectBox.SetSelection(0)
+        # begin wxGlade: ShorterFrame.__set_properties
+        self.SetTitle(_("Geekly Planet URL Shorter"))
+        self.SetSize((600, 220))
+        self.SetBackgroundColour(Colour(235, 232, 228))
+        self.SetForegroundColour(Colour(31, 31, 31))
+        self.SelectBox.SetBackgroundColour(Colour(255, 255, 255))
+        self.SelectBox.SetForegroundColour(Colour(31, 31, 31))
+        self.TextOriginalUrl.SetBackgroundColour(Colour(255, 255, 255))
+        self.TextOriginalUrl.SetForegroundColour(Colour(31, 31, 31))
+        self.TextShortUrl.SetBackgroundColour(Colour(255, 255, 255))
+        self.TextShortUrl.SetForegroundColour(Colour(31, 31, 31))
+        self.ShortenButton.SetMinSize((85, 28))
+        self.ShortenButton.SetBackgroundColour(Colour(235, 232, 228))
+        self.ShortenButton.SetForegroundColour(Colour(31, 31, 31))
+        self.CopyButton.SetMinSize((85, 28))
+        self.CopyButton.SetBackgroundColour(Colour(235, 232, 228))
         # end wxGlade
 
     def __do_layout(self):
-        # begin wxGlade: BitLyFrame.__do_layout
-        FirstSizer = BoxSizer(VERTICAL)
-        sizer_1 = BoxSizer(HORIZONTAL)
-        FirstSizer.Add(self.SelectBox, 0, ALL, 6)
-        FirstSizer.Add(self.OriginalTextBox, 0, ALL|EXPAND, 6)
-        FirstSizer.Add(self.ShortUrlBox, 0, ALL|EXPAND, 6)
-        sizer_1.Add(self.ShortenButton, 0, LEFT|RIGHT, 100)
-        sizer_1.Add(self.CopyButton, 0, LEFT|RIGHT, 100)
-        FirstSizer.Add(sizer_1, 1, SHAPED, 0)
-        self.SetSizer(FirstSizer)
+        # begin wxGlade: ShorterFrame.__do_layout
+        CentralSizer = BoxSizer(VERTICAL)
+        SubCentral = BoxSizer(VERTICAL)
+        TotalGridSizer = GridSizer(1, 2, 0, 0)
+        RightGridSize = BoxSizer(VERTICAL)
+        LeftGridSize = BoxSizer(VERTICAL)
+        ShortURLSizer = BoxSizer(VERTICAL)
+        OriginalURLSizer = BoxSizer(VERTICAL)
+        DropMenuSizer = BoxSizer(VERTICAL)
+        DropMenuSizer.Add(self.SelectBox, 0, ALL, 5)
+        SubCentral.Add(DropMenuSizer, 1, EXPAND, 0)
+        OriginalURLSizer.Add(self.TextOriginalUrl, 0, ALL|EXPAND, 5)
+        SubCentral.Add(OriginalURLSizer, 1, EXPAND, 0)
+        ShortURLSizer.Add(self.TextShortUrl, 0, ALL|EXPAND, 5)
+        SubCentral.Add(ShortURLSizer, 1, EXPAND, 0)
+        LeftGridSize.Add(self.ShortenButton, 0, ALL|ALIGN_CENTER_HORIZONTAL, 5)
+        TotalGridSizer.Add(LeftGridSize, 1, EXPAND, 0)
+        RightGridSize.Add(self.CopyButton, 0, ALL|ALIGN_CENTER_HORIZONTAL, 5)
+        TotalGridSizer.Add(RightGridSize, 1, EXPAND, 0)
+        SubCentral.Add(TotalGridSizer, 1, EXPAND, 0)
+        CentralSizer.Add(SubCentral, 1, EXPAND, 0)
+        self.SetSizer(CentralSizer)
         self.Layout()
         # end wxGlade
 
-
     def OnShortenButton(self, event):
         shorter = self.SelectBox.GetValue()
-        url = self.OriginalTextBox.GetValue()
+        url = self.TextOriginalUrl.GetValue()
         if shorter == "bit.ly (anonymous)":
             shortened=shorten_apyly(url)
+        if shorter == "bit.ly (registered)":
+            shortened=shorten_pyly(url,pyly_key,pyly_user)
         elif shorter =="":
             shortened="No shorteners found."
-
+        if (pyly_key=='ENTER_YOUR_API_KEY_HERE'):
+             MessageBox("You forgot to specify your API KEY.", "Error")
+        if (pyly_user=='ENTER_YOUR_USER_HERE'):
+            MessageBox("You forgot to specify your USER.", "Error")
         if (shortened=="The URL was not recognized."):
             MessageBox("The URL was not recognized.", "Error")
         elif (shortened=="The URL was not provided."):
@@ -186,10 +219,10 @@ class BitLyFrame(Frame):
         elif (shortened=="No shorteners found."):
             MessageBox("No shorteners found.", "Error")
         else:
-            self.ShortUrlBox.SetValue(shorten_apyly(url))
+            self.TextShortUrl.SetValue(shortened)
 
     def OnCopyButton(self, event):
-        text = self.ShortUrlBox.GetValue()
+        text = self.TextShortUrl.GetValue()
         self.do = TextDataObject()
         self.do.SetText(text)
         if TheClipboard.Open():
@@ -200,22 +233,23 @@ class BitLyFrame(Frame):
         else:
             MessageBox("Unable to open the clipboard", "Error")
 
-# end of class BitLyFrame
+
+# end of class ShorterFrame
 
 
-class MyApp(App):
+class GeeklyShorter(App):
     def OnInit(self):
         InitAllImageHandlers()
-        FirstFrame = BitLyFrame(None, -1, "")
-        self.SetTopWindow(FirstFrame)
-        FirstFrame.Show()
+        GeeklyFrame = ShorterFrame(None, -1, "")
+        self.SetTopWindow(GeeklyFrame)
+        GeeklyFrame.Show()
         return 1
 
-# end of class MyApp
+# end of class GeeklyShorter
 
 if __name__ == "__main__":
     import gettext
-    gettext.install("GeeklyShorter") # replace with the appropriate catalog name
+    gettext.install("geeklyshorter") # replace with the appropriate catalog name
 
-    GeeklyShorter = MyApp(0)
-    GeeklyShorter.MainLoop()
+    geeklyshorter = GeeklyShorter(0)
+    geeklyshorter.MainLoop()
