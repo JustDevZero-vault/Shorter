@@ -35,13 +35,14 @@ from wx import App,Frame,DEFAULT_FRAME_STYLE,ComboBox,CB_DROPDOWN,CB_READONLY,CB
 #import wx
 # begin wxGlade: extracode
 # end wxGlade
-
+from exceptions import UnboundLocalError, ImportError
 from base64 import b64decode
 from cStringIO import StringIO
 from urllib import urlopen
 
 AnonymousBitlyFlag = True
 BitlyFlag = True
+TinyurlFlag = True
 
 try:
     from apyly import shorten_url as shorten_apyly,splitter
@@ -51,6 +52,10 @@ try:
     from pyly import shorten_url as shorten_pyly, key as pyly_key, user as pyly_user
 except ImportError:
     BitlyFlag = False
+try:
+    from tinyurl import shorten_url as shorten_tinyurl
+except ImportError:
+    TinyurlFlag = False
 #GLOBAL STUFF
 
 def getImageStream():
@@ -128,6 +133,8 @@ class ShorterFrame(Frame):
             choices.append("bit.ly (anonymous)")
         if BitlyFlag:
             choices.append("bit.ly (registered)")
+        if TinyurlFlag:
+            choices.append("TinyUrl")
         choices.sort()
         # begin wxGlade: ShorterFrame.__init__
         kwds["style"] = DEFAULT_FRAME_STYLE
@@ -205,21 +212,29 @@ class ShorterFrame(Frame):
         if shorter == "bit.ly (anonymous)":
             shortened=shorten_apyly(url)
         if shorter == "bit.ly (registered)":
-            shortened=shorten_pyly(url,pyly_key,pyly_user)
+            if (pyly_key=='ENTER_YOUR_API_KEY_HERE'):
+                MessageBox("You forgot to specify your API KEY.", "Error")
+            if (pyly_user=='ENTER_YOUR_USER_HERE'):
+                MessageBox("You forgot to specify your USER.", "Error")
+            else:
+                shortened=shorten_pyly(url,pyly_key,pyly_user)
+
+        if shorter == "TinyUrl":
+            shortened=shorten_tinyurl(url)
+
         elif shorter =="":
             shortened="No shorteners found."
-        if (pyly_key=='ENTER_YOUR_API_KEY_HERE'):
-             MessageBox("You forgot to specify your API KEY.", "Error")
-        if (pyly_user=='ENTER_YOUR_USER_HERE'):
-            MessageBox("You forgot to specify your USER.", "Error")
-        if (shortened=="The URL was not recognized."):
-            MessageBox("The URL was not recognized.", "Error")
-        elif (shortened=="The URL was not provided."):
-            MessageBox("The URL was not provided.", "Error")
-        elif (shortened=="No shorteners found."):
-            MessageBox("No shorteners found.", "Error")
-        else:
-            self.TextShortUrl.SetValue(shortened)
+        try:
+            if (shortened=="The URL was not recognized."):
+                MessageBox("The URL was not recognized.", "Error")
+            elif (shortened=="The URL was not provided."):
+                MessageBox("The URL was not provided.", "Error")
+            elif (shortened=="No shorteners found."):
+                MessageBox("No shorteners found.", "Error")
+            else:
+                self.TextShortUrl.SetValue(shortened)
+        except UnboundLocalError:
+            pass
 
     def OnCopyButton(self, event):
         text = self.TextShortUrl.GetValue()
