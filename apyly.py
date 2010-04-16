@@ -81,8 +81,6 @@ def sysRun():
 def askRun():
     url=str(raw_input('Insert the url that you want to shorten: '))
     return shorten_url(url)
-    #else:
-        #return 'Error: The URL was not provided.'
 
 
 try:
