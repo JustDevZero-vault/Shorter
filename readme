@@ -21,10 +21,10 @@
  *
  *
  *   ------------------- SCRIPT LIST ------------------ *
- *   apyly: Short the urls to a new one, with the bit.ly service, it short an url anonymously.
+ *   apyly, tinyurl, unu, isgd: Short the urls to a new one, with the bit.ly,tinyurl,u.nu, and is.gd services respectivelly, it short an url anonymously.
  *   pyly: Short the urls to a new one, with the bit.ly service.
- *   tinyurl: Shorts the url to a new one, with the tinyurl service.
  *   It shorts the url with your user and apikey for having stadistics and all the benefits of registered.
+ *   shorter: A simple GUI shorter, need to download the files apyly,pyly,tinyurl,unu,isgd (just need one but can select between theme)
  *   pyBoter: An earlier bot for irc using python-irclib. It doesn't do very much for the moment.
  *
  *
