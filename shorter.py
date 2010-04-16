@@ -4,7 +4,7 @@
 
 
 #       pyly.py written in python2.8
-#       version 1.3
+#       version 1.4
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 #       1.1     Improved the look in all systems, under Windows was VERY VERY UGLY.
 #       1.2     Fixed bugs and added tinyurl.
 #       1.3     Improved dialog errors and added is.gd.
+#       1.4     Added u.nu.
 #--------------------------- TESTED IN ------------------------------------------ #
 #       GNU/Linux (all distros)     WINDOWS NT*         MacOSX      *BSD
 
@@ -42,10 +43,13 @@ from base64 import b64decode
 from cStringIO import StringIO
 from urllib import urlopen
 
+
+#THE LONG LIST OF SERVICE IMPORTS
 AnonymousBitlyFlag = True
 BitlyFlag = True
 TinyurlFlag = True
 IsGdFlag = True
+UnuFlag = True
 
 try:
     from apyly import shorten_url as shorten_apyly,splitter
@@ -63,6 +67,11 @@ try:
     from isgd import shorten_url as shorten_isgd
 except ImportError:
     IsGdFlag = False
+try:
+    from unu import shorten_url as shorten_unu
+except ImportError:
+    UnuFlag = False
+#FINISHED THE LONG LIST OF SERVICE IMPORTS
 #GLOBAL STUFF
 
 def getImageStream():
@@ -144,6 +153,8 @@ class ShorterFrame(Frame):
             choices.append("tinyurl")
         if IsGdFlag:
             choices.append("is.gd")
+        if UnuFlag:
+            choices.append("u.nu")
         choices.sort()
         # begin wxGlade: ShorterFrame.__init__
         kwds["style"] = DEFAULT_FRAME_STYLE
@@ -237,6 +248,8 @@ class ShorterFrame(Frame):
                 shortened=shorten_tinyurl(url)
             if shorter == "is.gd":
                 shortened=shorten_isgd(url)
+            if shorter == "u.nu":
+                shortened=shorten_unu(url)
 
             elif shorter =="":
                 shortened="Error: No shorter found."
