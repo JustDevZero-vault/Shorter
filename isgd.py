@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from urllib import urlopen
+from urllib import urlopen, urlencode
 from exceptions import IndexError, IOError
 from sys import argv
 from re import match
-#       pyly.py written in python2.8
-#       version 1.5
+#       tinyurl.py written in python2.8
+#       version 1.0
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
@@ -23,29 +23,14 @@ from re import match
 #       along with this program; if not, get a copy on http://www.gnu.org/licenses/gpl.txt
 
 #------------------------------ Utilities --------------------------------------- #
-# The main purpose of this script is to easily give urls with bit.ly service.
+# The main purpose of this script is to easily give urls with is.gd service.
 # It shorts the url anonymously.
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
-#       1.1     Improved the speed (only a little), deleted some splitting process
-#       1.2     Added a system argument function, you can choose between the sys.argv or ask function.
-#               By changing the line 75 for sysRun() or askRun()
-#       1.3     Fixed bugs, errors are treated as exceptions.
-#       1.4     Some prints become "returns", because it allows to use it externally
-#       1.5     Fixed bugs, ignores not url strings (http* *ftp*).
 #--------------------------- TESTED IN ------------------------------------------ #
 #       GNU/Linux (all distros)     WINDOWS NT*         MacOSX      *BSD
 
-def splitter(responde):
-    try:
-        opened=responde.split('var SHORTEN_RESULT = {') [1]
-        closed=opened.split('};') [0]
-        cleaned=closed.split('"')
-        #Here we make a splitting process, for cleaning data, and giving the url.
-        return cleaned[17]
-    except IndexError:
-        return 'Error: The URL entered was not valid.'
-        #If the url is not recognized, it causes an exception.
+
 
 def check_url(long_url):
     if match("^https?://[^ ]+|^ftp?://[^ ]+|^sftp?://[^ ]+", long_url):
@@ -53,20 +38,19 @@ def check_url(long_url):
     else:
         return False
 
-
-def shorten_url(url):
-    if check_url(url):
+def shorten_url(long_url):
+    if check_url(long_url):
         try:
-            longUrl = (url)
-            encodeurl='http://bit.ly/%s' % (longUrl)
+            longUrl=urlencode(dict(longurl=long_url))
+            encodeurl='http://is.gd/api.php?%s' % (longUrl)
             request = urlopen(encodeurl)
             responde = request.read ()
             request.close()
-            return splitter(responde)
-            #Resquesting the for the url, and doing the split.
+            return responde
+            #Resquesting for the url
         except IOError, e:
             return 'Error: An I/O error happened.'
-            #Obviously, is obvious.
+        #Obviously, is obvious.
     else:
         return "Error: The URL was not provided."
 
@@ -80,8 +64,6 @@ def sysRun():
 def askRun():
     url=str(raw_input('Insert the url that you want to shorten: '))
     return shorten_url(url)
-    #else:
-        #return 'Error: The URL was not provided.'
 
 
 try:

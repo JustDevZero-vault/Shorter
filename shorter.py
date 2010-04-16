@@ -4,7 +4,7 @@
 
 
 #       pyly.py written in python2.8
-#       version 1.4
+#       version 1.3
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
@@ -28,6 +28,8 @@
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
 #       1.1     Improved the look in all systems, under Windows was VERY VERY UGLY.
+#       1.2     Fixed bugs and added tinyurl.
+#       1.3     Improved dialog errors and added is.gd.
 #--------------------------- TESTED IN ------------------------------------------ #
 #       GNU/Linux (all distros)     WINDOWS NT*         MacOSX      *BSD
 
@@ -43,6 +45,7 @@ from urllib import urlopen
 AnonymousBitlyFlag = True
 BitlyFlag = True
 TinyurlFlag = True
+IsGdFlag = True
 
 try:
     from apyly import shorten_url as shorten_apyly,splitter
@@ -53,9 +56,13 @@ try:
 except ImportError:
     BitlyFlag = False
 try:
-    from tinyurl import shorten_url as shorten_tinyurl
+    from tinyurl import shorten_url as shorten_tinyurl, check_url
 except ImportError:
     TinyurlFlag = False
+try:
+    from isgd import shorten_url as shorten_isgd
+except ImportError:
+    IsGdFlag = False
 #GLOBAL STUFF
 
 def getImageStream():
@@ -134,12 +141,18 @@ class ShorterFrame(Frame):
         if BitlyFlag:
             choices.append("bit.ly (registered)")
         if TinyurlFlag:
-            choices.append("TinyUrl")
+            choices.append("tinyurl")
+        if IsGdFlag:
+            choices.append("is.gd")
         choices.sort()
         # begin wxGlade: ShorterFrame.__init__
         kwds["style"] = DEFAULT_FRAME_STYLE
         Frame.__init__(self, *args, **kwds)
-        self.SelectBox = ComboBox(self, 0, choices=choices, style=CB_DROPDOWN|CB_READONLY|CB_SORT)
+        if choices:
+            valchoice=choices[0]
+        else:
+            valchoice=""
+        self.SelectBox = ComboBox(self, 0, choices=choices, value=valchoice, style=CB_DROPDOWN|CB_READONLY|CB_SORT)
         self.TextOriginalUrl = TextCtrl(self, 1, value="Enter your bad long url here.")
         self.TextShortUrl = TextCtrl(self, 2,  value="")
 
@@ -209,32 +222,38 @@ class ShorterFrame(Frame):
     def OnShortenButton(self, event):
         shorter = self.SelectBox.GetValue()
         url = self.TextOriginalUrl.GetValue()
-        if shorter == "bit.ly (anonymous)":
-            shortened=shorten_apyly(url)
         if shorter == "bit.ly (registered)":
             if (pyly_key=='ENTER_YOUR_API_KEY_HERE'):
-                MessageBox("You forgot to specify your API KEY.", "Error")
+                MessageBox("Error: You forgot to specify your API KEY.", "Error")
             if (pyly_user=='ENTER_YOUR_USER_HERE'):
-                MessageBox("You forgot to specify your USER.", "Error")
-            else:
+                MessageBox("Error: You forgot to specify your USER.", "Error")
+        if check_url(url):
+            if shorter == "bit.ly (anonymous)":
+                shortened=shorten_apyly(url)
+            if shorter == "bit.ly (registered)":
                 shortened=shorten_pyly(url,pyly_key,pyly_user)
 
-        if shorter == "TinyUrl":
-            shortened=shorten_tinyurl(url)
+            if shorter == "tinyurl":
+                shortened=shorten_tinyurl(url)
+            if shorter == "is.gd":
+                shortened=shorten_isgd(url)
 
-        elif shorter =="":
-            shortened="No shorteners found."
-        try:
-            if (shortened=="The URL was not recognized."):
-                MessageBox("The URL was not recognized.", "Error")
-            elif (shortened=="The URL was not provided."):
-                MessageBox("The URL was not provided.", "Error")
-            elif (shortened=="No shorteners found."):
-                MessageBox("No shorteners found.", "Error")
-            else:
-                self.TextShortUrl.SetValue(shortened)
-        except UnboundLocalError:
-            pass
+            elif shorter =="":
+                shortened="Error: No shorter found."
+            try:
+                if (shortened=="Error: The URL entered was not valid."):
+                    MessageBox("Error: The URL entered was not valid.", "Error")
+                elif (shortened=="Error: The URL was not provided."):
+                    MessageBox("Error: The URL was not provided.", "Error")
+                elif (shortened=="Error: No shorter found."):
+                    MessageBox("Error: No shorter found.", "Error")
+                else:
+                    self.TextShortUrl.SetValue(shortened)
+            except UnboundLocalError:
+                pass
+        else:
+            MessageBox("Error: The URL was not provided.", "Error")
+
 
     def OnCopyButton(self, event):
         text = self.TextShortUrl.GetValue()
@@ -246,7 +265,7 @@ class ShorterFrame(Frame):
             #status = "Copied %s to clipboard" % text
             #print status
         else:
-            MessageBox("Unable to open the clipboard", "Error")
+            MessageBox("Error: Unable to open the clipboard", "Error")
 
 
 # end of class ShorterFrame

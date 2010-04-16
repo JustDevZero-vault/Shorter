@@ -6,7 +6,7 @@ from exceptions import IndexError, IOError
 from sys import argv
 from re import match
 #       tinyurl.py written in python2.8
-#       version 1.0
+#       version 1.1
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
@@ -27,6 +27,7 @@ from re import match
 # It shorts the url anonymously.
 #--------------------------- CHANGE LOG ----------------------------------------- #
 #       1.0     Initial release
+#       1.1     Fixed bugs, ignores not url strings (http* *ftp*).
 #--------------------------- TESTED IN ------------------------------------------ #
 #       GNU/Linux (all distros)     WINDOWS NT*         MacOSX      *BSD
 
@@ -49,29 +50,28 @@ def shorten_url(long_url):
             return responde
             #Resquesting for the url
         except IOError, e:
-            raise 'Ops! An I/O error happened.'
+            return 'Error: An I/O error happened.'
         #Obviously, is obvious.
     else:
-        responde='The URL was not recognized.'
-        return responde
+        return 'Error: The URL entered was not valid.'
 
 def sysRun():
     #If you chose sysRun, it will use the url provided in your command line.
     try:
         return shorten_url(argv[1])
     except IndexError:
-        return 'The URL was not provided.'
+        return 'Error: The URL was not provided.'
 
 def askRun():
     url=str(raw_input('Insert the url that you want to shorten: '))
     if url!='':
         return shorten_url(long_url)
     else:
-        return 'The URL was not provided.'
+        return 'Error: The URL was not provided.'
 
 
 try:
     if __name__ == '__main__':
         print sysRun()
 except KeyboardInterrupt:
-    print '\nThe progam was interrupted.'
+    print '\nThe progam was interrupted by keyboard.'
