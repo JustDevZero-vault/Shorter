@@ -5,7 +5,7 @@ from urllib import urlopen,urlencode
 from exceptions import IndexError, IOError, KeyError
 from sys import argv
 from re import match
-#       pyly.py written in python2.6
+#       zimpmyurl.py written in python2.8
 #       version 1.0
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #

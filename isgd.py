@@ -5,7 +5,7 @@ from urllib import urlopen, urlencode
 from exceptions import IndexError, IOError
 from sys import argv
 from re import match
-#       tinyurl.py written in python2.8
+#       isgd.py written in python2.8
 #       version 1.0
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #

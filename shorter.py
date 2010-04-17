@@ -3,7 +3,7 @@
 
 
 
-#       pyly.py written in python2.8
+#       shorterpy written in python2.8
 #       version 1.4
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #

@@ -5,7 +5,7 @@ from urllib import urlopen
 from exceptions import IndexError, IOError
 from sys import argv
 from re import match,search,compile
-#       pyly.py written in python2.8
+#       apyly.py written in python2.8
 #       version 1.6
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #

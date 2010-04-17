@@ -5,8 +5,8 @@ from urllib import urlopen,urlencode
 from exceptions import IndexError, IOError, KeyError
 from sys import argv
 from re import match, search, compile
-#       pyly.py written in python2.6
-#       version 1.6
+#       urlie.py written in python2.8
+#       version 1.0
 #       Copyright 2010 Mephiston <meph.snake@gmail.com>
 #
 #       This program is free software; you can redistribute it and/or modify
