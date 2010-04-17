@@ -25,7 +25,6 @@
  *   pyly: Short the urls to a new one, with the bit.ly service.
  *   It shorts the url with your user and apikey for having stadistics and all the benefits of registered.
  *   shorter: A simple GUI shorter, need to download the files apyly,pyly,tinyurl,unu,isgd (just need one but can select between theme)
- *   pyBoter: An earlier bot for irc using python-irclib. It doesn't do very much for the moment.
  *
  *
  */
