@@ -21,7 +21,7 @@
  *
  *
  *   ------------------- SCRIPT LIST ------------------ *
- *   apyly, tinyurl, unu, isgd: Short the urls to a new one, with the bit.ly,tinyurl,u.nu, and is.gd services respectivelly, it short an url anonymously.
+ *   apyly, tinyurl, unu, isgd, zipmyurl, urlie, fongs: Short the urls to a new one, with the bit.ly,tinyurl,u.nu, is.gd, zipmyurl, urlie, fon.gs services respectivelly, it short an url anonymously.
  *   pyly: Short the urls to a new one, with the bit.ly service.
  *   It shorts the url with your user and apikey for having stadistics and all the benefits of registered.
  *   shorter: A simple GUI shorter, need to download the files apyly,pyly,tinyurl,unu,isgd (just need one but can select between theme)

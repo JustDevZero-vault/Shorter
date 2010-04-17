@@ -50,6 +50,9 @@ BitlyFlag = True
 TinyurlFlag = True
 IsGdFlag = True
 UnuFlag = True
+ZipMyUrlFlag = True
+UrlieFlag = True
+FonGsFlag = True
 
 try:
     from apyly import shorten_url as shorten_apyly,splitter
@@ -71,6 +74,19 @@ try:
     from unu import shorten_url as shorten_unu
 except ImportError:
     UnuFlag = False
+try:
+    from zipmyurl import shorten_url as shorten_zip
+except ImportError:
+    ZipMyUrlFlag = False
+try:
+    from urlie import shorten_url as shorten_urlie
+except ImportError:
+    UrlieFlag = False
+
+try:
+    from fongs import shorten_url as shorten_fongs
+except ImportError:
+    FonGsFlag = False
 #FINISHED THE LONG LIST OF SERVICE IMPORTS
 #GLOBAL STUFF
 
@@ -155,6 +171,12 @@ class ShorterFrame(Frame):
             choices.append("is.gd")
         if UnuFlag:
             choices.append("u.nu")
+        if ZipMyUrlFlag:
+            choices.append("ZipMyUrl")
+        if UrlieFlag:
+            choices.append("urlie")
+        if FonGsFlag:
+            choices.append("fon.gs")
         choices.sort()
         # begin wxGlade: ShorterFrame.__init__
         kwds["style"] = DEFAULT_FRAME_STYLE
@@ -250,6 +272,12 @@ class ShorterFrame(Frame):
                 shortened=shorten_isgd(url)
             if shorter == "u.nu":
                 shortened=shorten_unu(url)
+            if shorter == "ZipMyUrl":
+                shortened=shorten_zip(url)
+            if shorter == "urlie":
+                shortened=shorten_urlie(url)
+            if shorter == "fon.gs":
+                shortened=shorten_fongs(url)
 
             elif shorter =="":
                 shortened="Error: No shorter found."
